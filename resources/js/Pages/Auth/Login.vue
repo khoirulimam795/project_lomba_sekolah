@@ -2,7 +2,7 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { LOGO, MASKOT } from '@/brand';
+import { LOGO } from '@/brand';
 
 defineProps({
     canResetPassword: { type: Boolean, default: true },
@@ -17,7 +17,6 @@ const form = useForm({
 
 const showPw = ref(false);
 const logoOk = ref(true);
-const maskotOk = ref(true);
 
 const submit = () => {
     form.post(route('login'), {
@@ -31,13 +30,13 @@ const submit = () => {
 
     <div class="min-h-screen grid lg:grid-cols-2 font-sans text-ink">
         <!-- ============ SISI BRAND (gelap) ============ -->
-        <aside class="relative overflow-hidden bg-forest text-parchment flex flex-col justify-between p-5 sm:p-8 lg:p-12 min-h-[300px] lg:min-h-screen">
+        <aside class="relative overflow-hidden bg-forest text-parchment flex flex-col justify-center p-5 sm:p-8 lg:p-12 min-h-[300px] lg:min-h-screen">
             <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_90%_at_80%_-10%,theme(colors.gold/14%),transparent_60%)]"></div>
             <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_70%_at_0%_100%,theme(colors.khaki/12%),transparent_55%)]"></div>
             <div class="pointer-events-none absolute inset-0 opacity-[0.05] bg-[linear-gradient(theme(colors.parchment)_1px,transparent_1px),linear-gradient(90deg,theme(colors.parchment)_1px,transparent_1px)] bg-[size:42px_42px]"></div>
             <div class="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold via-khaki to-forest"></div>
 
-            <!-- atas: logo + bintang -->
+            <!-- konten brand -->
             <div class="relative auth-reveal">
                 <div class="flex items-end gap-1 h-5 sm:h-7 mb-3 sm:mb-5">
                     <svg v-for="(off, i) in [16, 8, 3, 0, 3, 8, 16]" :key="i" :style="{ marginTop: off + 'px', animationDelay: i * 90 + 'ms' }"
@@ -45,28 +44,18 @@ const submit = () => {
                         <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z" />
                     </svg>
                 </div>
-                <div class="flex items-center gap-3 sm:gap-4">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
                     <img v-if="logoOk" :src="LOGO" @error="logoOk = false" alt="PERSIMANU"
-                        class="w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24 object-contain drop-shadow-2xl emblem-float flex-shrink-0" />
-                    <div v-else class="w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-3xl sm:text-4xl flex-shrink-0">⚜</div>
-                    <div>
+                        class="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 object-contain drop-shadow-2xl emblem-float flex-shrink-0" />
+                    <div v-else class="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0">⚜</div>
+                    <div class="text-center sm:text-left">
                         <div class="text-[8px] sm:text-[10px] lg:text-xs font-display font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase text-gold/90">Sako Pandu Ma'arif NU</div>
-                        <h1 class="font-display font-extrabold leading-[0.9] tracking-tight text-2xl sm:text-3xl lg:text-5xl mt-0.5 sm:mt-1">PERSIMANU<br /><span class="text-gold">JEPARA</span></h1>
+                        <h1 class="font-display font-extrabold leading-[0.9] tracking-tight text-3xl sm:text-4xl lg:text-5xl mt-0.5 sm:mt-1">PERSIMANU<br /><span class="text-gold">JEPARA</span></h1>
                     </div>
                 </div>
-                <p class="mt-4 sm:mt-6 max-w-md text-parchment/70 text-xs sm:text-sm lg:text-base leading-relaxed hidden sm:block">
+                <p class="mt-4 sm:mt-6 max-w-md text-parchment/70 text-xs sm:text-sm lg:text-base leading-relaxed text-center sm:text-left">
                     Sistem Penilaian Lomba Kepramukaan — dari pendaftaran kontingen sampai papan juara, dalam satu tempat.
                 </p>
-            </div>
-
-            <!-- bawah: maskot + sapaan -->
-            <div class="relative mt-6 sm:mt-10 flex items-end gap-3 sm:gap-4 auth-reveal" style="animation-delay: 160ms">
-                <div class="relative bg-parchment text-ink rounded-2xl rounded-bl-sm px-3 sm:px-4 py-2 sm:py-2.5 shadow-xl rotate-[-1.5deg] max-w-[160px] sm:max-w-[220px]">
-                    <p class="text-xs sm:text-sm font-semibold leading-snug">Selamat datang kembali! ️</p>
-                </div>
-                <img v-if="maskotOk" :src="MASKOT" @error="maskotOk = false" alt="SiELANG"
-                    class="w-20 sm:w-28 lg:w-36 object-contain drop-shadow-2xl maskot-float select-none" draggable="false" />
-                <div v-else class="w-20 sm:w-28 lg:w-36 h-24 sm:h-32 lg:h-36 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-4xl sm:text-5xl maskot-float">🦅</div>
             </div>
         </aside>
 
@@ -79,7 +68,7 @@ const submit = () => {
             </a>
 
             <div class="relative w-full max-w-md auth-reveal px-1 sm:px-0" style="animation-delay: 80ms">
-                <div class="mb-5 sm:mb-7">
+                <div class="mb-5 sm:mb-7 text-center sm:text-left">
                     <span class="text-[10px] sm:text-xs font-display font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase text-khaki">Masuk ke Sistem</span>
                     <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-forest mt-1 leading-none">Selamat Datang</h2>
                     <p class="text-xs sm:text-sm text-ink/55 mt-1.5 sm:mt-2">Masuk dengan akun yang diberikan panitia.</p>
@@ -161,8 +150,6 @@ const submit = () => {
 <style scoped>
 .auth-reveal { opacity: 0; animation: authReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 @keyframes authReveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-.maskot-float { animation: maskotFloat 4s ease-in-out infinite; }
-@keyframes maskotFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(-1deg); } }
 .emblem-float { animation: emblemFloat 6s ease-in-out infinite; }
 @keyframes emblemFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.02); } }
 .twinkle { animation: twinkle 2.4s ease-in-out infinite; }
