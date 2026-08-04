@@ -140,11 +140,12 @@ const closeMobileMenu = () => {
                 <div class="flex items-center gap-2 sm:gap-3">
                     <img v-if="logoOk" :src="LOGO" alt="" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 object-contain opacity-90" />
                     <div class="leading-tight">
-                        <div class="font-display font-extrabold text-parchment tracking-wide text-xs sm:text-sm">POLITEKNIK BALEKAMBANG JEPARA</div>
+                        <div class="font-display font-extrabold text-parchment tracking-wide text-xs sm:text-sm">PANITIA PERSIMANU</div>
                         <div class="text-parchment/45 text-[8px] sm:text-[10px] md:text-xs">Sako Pandu Ma'arif NU</div>
                     </div>
                 </div>
                 <div class="text-parchment/45 text-center sm:text-right text-[8px] sm:text-[10px] md:text-xs">
+                    Politeknik Balekambang Jepara
                     © 2026 Khoirul Imam Fazri
                 </div>
             </div>

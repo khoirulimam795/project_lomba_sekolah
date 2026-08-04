@@ -19,6 +19,7 @@ class LombaKontingen extends Model
         'golongan',
         'pendamping_id',
         'nomor_urut_tampil',
+        'kategori',
         'status',
     ];
 

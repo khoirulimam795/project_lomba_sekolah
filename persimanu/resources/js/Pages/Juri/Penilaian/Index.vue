@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import JuriLayout from '@/Layouts/JuriLayout.vue';
+import { golLabel } from '@/golongan';
 
 const props = defineProps({
     lombas: { type: Array, default: () => [] },
@@ -11,6 +12,9 @@ const statusClass = {
     aktif: 'bg-green-100 text-green-700 border-green-300',
     selesai: 'bg-blue-100 text-blue-700 border-blue-300',
 };
+
+const kategoriLabel = { PA: 'Putra', PI: 'Putri' };
+const kategoriIcon = { PA: '👦', PI: '👧' };
 </script>
 
 <template>
@@ -49,6 +53,7 @@ const statusClass = {
                         class="reveal group relative bg-white rounded-xl border border-line shadow-sm p-4 sm:p-5 flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-gold/60"
                     >
                         <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-forest to-gold opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                        
                         <div class="flex items-start justify-between gap-2">
                             <h3 class="font-display text-lg font-bold text-forest group-hover:text-gold transition-colors leading-tight">
                                 {{ l.nama }}
@@ -57,7 +62,31 @@ const statusClass = {
                                 {{ l.status }}
                             </span>
                         </div>
-                        <p class="text-xs text-ink/55 mt-2 flex-1">🏆 {{ l.event?.nama ?? '-' }}</p>
+
+                        <p class="text-xs text-ink/55 mt-2">🏆 {{ l.event?.nama ?? '-' }}</p>
+
+                        <!-- ✅ BADGE GOLONGAN + KATEGORI (seperti admin) -->
+                        <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                            <span v-if="l.golongan" class="text-[10px] sm:text-xs bg-forest/10 text-forest px-2 py-0.5 rounded-full font-medium">
+                                {{ golLabel(l.golongan) }}
+                            </span>
+                            <span v-if="l.kategori" class="text-[10px] sm:text-xs bg-gold/15 text-gold px-2 py-0.5 rounded-full font-medium">
+                                {{ kategoriIcon[l.kategori] }} {{ kategoriLabel[l.kategori] }}
+                            </span>
+                        </div>
+
+                        <!-- ✅ STATUS PENILAIAN -->
+                        <div class="mt-3 flex items-center gap-2">
+                            <span v-if="l.sudah_dinilai"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 border border-green-300 text-[10px] sm:text-xs font-semibold">
+                                ✅ Sudah Dinilai
+                            </span>
+                            <span v-else
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 border border-amber-300 text-[10px] sm:text-xs font-semibold">
+                                ⏳ Belum Dinilai
+                            </span>
+                        </div>
+
                         <div class="mt-4 flex items-center justify-between">
                             <span class="inline-flex items-center gap-1.5 text-sm">
                                 <span class="w-2 h-2 rounded-full bg-gold"></span>

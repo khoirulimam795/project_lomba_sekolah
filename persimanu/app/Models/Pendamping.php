@@ -12,6 +12,7 @@ class Pendamping extends Model
 
     protected $fillable = [
         'kontingen_id',
+        'slot_index',
         'nama',
         'jenis_kelamin',
         'jabatan',

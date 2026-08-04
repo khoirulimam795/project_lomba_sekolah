@@ -13,13 +13,15 @@ class Lomba extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_id',
-        'nama',
-        'slug',
-        'deskripsi',
-        'status',
-        'created_by',
-    ];
+    'event_id',
+    'nama',
+    'slug',
+    'deskripsi',
+    'golongan',   // ✅ baru
+    'kategori',   // ✅ baru
+    'status',
+    'created_by',
+];
 
     public function event(): BelongsTo
     {

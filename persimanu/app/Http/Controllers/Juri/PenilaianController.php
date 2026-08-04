@@ -25,15 +25,25 @@ class PenilaianController extends Controller
     }
 
     public function index()
-    {
-        $lombas = Lomba::whereHas('juri', fn ($q) => $q->where('users.id', Auth::id()))
-            ->with('event')
-            ->withCount(['alokasi as regu_siap' => fn ($q) => $q->where('status', 'siap')])
-            ->orderBy('nama')
-            ->get();
+{
+    $juri = Auth::user();
 
-        return inertia('Juri/Penilaian/Index', compact('lombas'));
-    }
+    $lombas = Lomba::whereHas('juri', fn ($q) => $q->where('users.id', $juri->id))
+        ->with(['event', 'kriteriaKomponens' => fn($q) => $q->where('is_active', true)->orderBy('urutan')])
+        ->withCount(['alokasi as regu_siap' => fn ($q) => $q->where('status', 'siap')])
+        ->orderBy('nama')
+        ->get()
+        ->map(function ($lomba) use ($juri) {
+            // ✅ Cek apakah juri ini sudah submit penilaian untuk lomba ini
+            $lomba->sudah_dinilai = Penilaian::where('lomba_id', $lomba->id)
+                ->where('juri_id', $juri->id)
+                ->exists();
+            
+            return $lomba;
+        });
+
+    return inertia('Juri/Penilaian/Index', compact('lombas'));
+}
 
     public function show(Request $request, Lomba $lomba)
     {
@@ -166,23 +176,35 @@ class PenilaianController extends Controller
     }
 
     public function rekap()
-    {
-        $penilaians = Penilaian::where('juri_id', Auth::id())
-            ->with(['lomba.event', 'kontingen.team'])
-            ->orderByDesc('submitted_at')
-            ->get();
+{
+    $penilaians = Penilaian::where('juri_id', Auth::id())
+        ->with(['lomba.event', 'kontingen.team'])
+        ->orderByDesc('submitted_at')
+        ->get();
 
-        $grouped = $penilaians->groupBy('lomba_id')->map(fn ($g) => [
-            'lomba' => $g->first()->lomba,
-            'items' => $g->map(fn ($p) => [
-                'team_name'        => $p->kontingen->team->name ?? '-',
-                'golongan'         => $p->golongan,
-                'nomor_urut_tampil'=> $p->nomor_urut_tampil,
-                'nilai_akhir_juri' => $p->nilai_akhir_juri,
-                'submitted_at'     => optional($p->submitted_at)->format('d M Y H:i'),
-            ])->values(),
-        ])->values();
-
-        return inertia('Juri/Penilaian/Rekap', compact('grouped'));
+    // ✅ Kategori (PA/PI) hidup di alokasi (lomba_kontingen), bukan di penilaian.
+    //    Ambil 1x lewat map composite "lomba_id-kontingen_id" (anti N+1).
+    //    Defensif: kalau kolom `kategori` belum ada, map kosong -> halaman tetap jalan.
+    $kategoriMap = collect();
+    if (\Illuminate\Support\Facades\Schema::hasColumn((new LombaKontingen)->getTable(), 'kategori')) {
+        $lombaIds = $penilaians->pluck('lomba_id')->unique();
+        $kategoriMap = LombaKontingen::whereIn('lomba_id', $lombaIds)
+            ->get(['lomba_id', 'kontingen_id', 'kategori'])
+            ->mapWithKeys(fn ($a) => [$a->lomba_id . '-' . $a->kontingen_id => $a->kategori]);
     }
+
+    $grouped = $penilaians->groupBy('lomba_id')->map(fn ($g) => [
+        'lomba' => $g->first()->lomba,
+        'items' => $g->map(fn ($p) => [
+            'team_name'         => $p->kontingen->team->name ?? '-',
+            'golongan'          => $p->golongan,
+            'kategori'          => $kategoriMap[$p->lomba_id . '-' . $p->kontingen_id] ?? null, // ✅ baru
+            'nomor_urut_tampil' => $p->nomor_urut_tampil,
+            'nilai_akhir_juri'  => $p->nilai_akhir_juri,
+            'submitted_at'      => optional($p->submitted_at)->format('d M Y H:i'),
+        ])->values(),
+    ])->values();
+
+    return inertia('Juri/Penilaian/Rekap', compact('grouped'));
+}
 }

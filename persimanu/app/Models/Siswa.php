@@ -24,6 +24,7 @@ class Siswa extends Model implements HasMedia
         'nama_orang_tua',
         'alamat',
         'no_telp',
+        'slot_index',
         'jenjang_pendidikan',
         'golongan_pramuka',
         'golongan_darah',

@@ -87,7 +87,7 @@ const isImage = (mime) => mime?.startsWith('image/');
                         @change="onFileChange"
                         class="w-full text-sm text-ink/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-forest file:text-parchment file:font-semibold hover:file:bg-forest/90"
                     />
-                    <p class="text-xs text-ink/50 mt-1">Format: JPG, PNG, atau PDF. Maksimal 2 MB.</p>
+                    <p class="text-xs text-ink/50 mt-1">Format: JPG, PNG, atau PDF. Maksimal 10 MB.</p>
                     <div v-if="form.errors.bukti_pembayaran" class="text-red-600 text-sm mt-1">
                         {{ form.errors.bukti_pembayaran }}
                     </div>

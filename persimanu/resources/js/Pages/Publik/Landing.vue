@@ -187,7 +187,8 @@ onMounted(() => {
                                     class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain drop-shadow-2xl emblem-float flex-shrink-0" />
                                 <div>
                                     <div class="text-[8px] sm:text-[10px] md:text-xs font-display font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase text-gold/90">Sako Pandu Ma'arif NU</div>
-                                    <h1 class="font-display font-extrabold leading-[0.92] tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-0.5 sm:mt-1 text-parchment">SAKOMA</h1>
+                                    <h1 class="font-display font-extrabold leading-[0.92] tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-0.5 sm:mt-1 text-parchment">PERSIMANU</h1>
+                                    <h1 class="font-display font-extrabold leading-[0.92] tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-0.5 sm:mt-1 bg-gradient-to-r from-gold to-amber-500 bg-clip-text text-transparent">JEPARA</h1>
                                 </div>
                             </div>
                             <p class="mt-3 sm:mt-5 font-display text-base sm:text-lg md:text-2xl font-bold text-parchment leading-snug">{{ event.nama }}</p>

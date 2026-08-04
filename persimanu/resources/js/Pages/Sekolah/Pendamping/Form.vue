@@ -7,19 +7,19 @@ import { GOL_OPTIONS } from '@/golongan';
 const props = defineProps({
     kontingen: { type: Object, default: null },
     pendamping: { type: Object, default: null },
+    slot: { type: Number, default: null },
+    jk: { type: String, default: 'L' },
 });
 
 const isEditing = computed(() => Boolean(props.pendamping?.id));
-
-// ✅ Auto-fill asal instansi dari pangkalan login (D34)
 const teamName = props.kontingen?.team?.name ?? '';
 
 const form = useForm({
     nama: props.pendamping?.nama ?? '',
-    jenis_kelamin: props.pendamping?.jenis_kelamin ?? '',
-    jabatan: props.pendamping?.jabatan ?? 'PEMBINA PENDAMPING',       // ✅ auto-fill (D35)
+    jenis_kelamin: props.pendamping?.jenis_kelamin ?? props.jk ?? ' P',
+    jabatan: props.pendamping?.jabatan ?? 'PEMBINA PENDAMPING',
     pekerjaan: props.pendamping?.pekerjaan ?? '',
-    asal_instansi: props.pendamping?.asal_instansi ?? teamName,       // ✅ auto-fill (D34)
+    asal_instansi: props.pendamping?.asal_instansi ?? teamName,
     golongan_binaan: props.pendamping?.golongan_binaan ?? '',
     tempat_lahir: props.pendamping?.tempat_lahir ?? '',
     tanggal_lahir: props.pendamping?.tanggal_lahir ? String(props.pendamping.tanggal_lahir).slice(0, 10) : '',
@@ -27,6 +27,7 @@ const form = useForm({
     no_telp: props.pendamping?.no_telp ?? '',
     kota: props.pendamping?.kota ?? '',
     golongan_darah: props.pendamping?.golongan_darah ?? '',
+    slot_index: props.pendamping?.slot_index ?? props.slot ?? 1,
 });
 
 const submit = () => {
@@ -43,12 +44,12 @@ const submit = () => {
         <Head :title="isEditing ? 'Edit Pendamping' : 'Tambah Pendamping'" />
         <div class="max-w-3xl mx-auto px-2 sm:px-0">
             <div class="mb-6">
-                <Link :href="route('sekolah.pendamping.index', { kontingen: kontingen.id })" class="text-sm text-forest hover:underline">
-                    ← Kembali ke daftar pendamping
-                </Link>
+                <Link :href="route('sekolah.pendamping.index', { kontingen: kontingen.id })" class="text-sm text-forest hover:underline">← Kembali ke daftar pendamping</Link>
             </div>
 
             <form @submit.prevent="submit" class="bg-white rounded-xl border border-line shadow-sm p-4 sm:p-6 space-y-6">
+                <input type="hidden" v-model="form.slot_index" />
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-semibold mb-1">Nama Lengkap</label>
@@ -57,11 +58,11 @@ const submit = () => {
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Jenis Kelamin</label>
-                        <select v-model="form.jenis_kelamin" class="w-full border border-line rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gold">
-                            <option value="">Pilih</option>
+                        <select v-model="form.jenis_kelamin" disabled class="w-full border border-line rounded-lg px-4 py-2 bg-gray-100 text-ink/50 cursor-not-allowed">
                             <option value="L">Laki-laki</option>
                             <option value="P">Perempuan</option>
                         </select>
+                        <p class="text-[11px] text-ink/45 mt-1">Jenis kelamin ditentukan oleh slot kuota.</p>
                         <div v-if="form.errors.jenis_kelamin" class="text-red-600 text-sm mt-1">{{ form.errors.jenis_kelamin }}</div>
                     </div>
                 </div>
@@ -88,7 +89,6 @@ const submit = () => {
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Golongan Binaan</label>
-                        <!-- ✅ ENUM BARU: 3 golongan via GOL_OPTIONS -->
                         <select v-model="form.golongan_binaan" class="w-full border border-line rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gold">
                             <option value="">Pilih (untuk pembina)</option>
                             <option v-for="g in GOL_OPTIONS" :key="g.value" :value="g.value">{{ g.label }}</option>
@@ -118,10 +118,7 @@ const submit = () => {
                         <label class="block font-semibold mb-1">Golongan Darah</label>
                         <select v-model="form.golongan_darah" class="w-full border border-line rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gold">
                             <option value="">Pilih</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="AB">AB</option>
-                            <option value="O">O</option>
+                            <option value="A">A</option><option value="B">B</option><option value="AB">AB</option><option value="O">O</option>
                         </select>
                     </div>
                 </div>
@@ -139,9 +136,7 @@ const submit = () => {
                     <button type="submit" :disabled="form.processing" class="w-full sm:w-auto px-5 py-2 bg-forest text-parchment rounded-lg font-semibold hover:bg-forest/90 disabled:opacity-50 text-sm sm:text-base">
                         {{ isEditing ? 'Update Pendamping' : 'Simpan Pendamping' }}
                     </button>
-                    <Link :href="route('sekolah.pendamping.index', { kontingen: kontingen.id })" class="w-full sm:w-auto text-center px-5 py-2 border border-line rounded-lg hover:bg-parchment text-sm sm:text-base">
-                        Batal
-                    </Link>
+                    <Link :href="route('sekolah.pendamping.index', { kontingen: kontingen.id })" class="w-full sm:w-auto text-center px-5 py-2 border border-line rounded-lg hover:bg-parchment text-sm sm:text-base">Batal</Link>
                 </div>
             </form>
         </div>
